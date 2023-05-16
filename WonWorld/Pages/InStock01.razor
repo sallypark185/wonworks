@@ -1,0 +1,70 @@
+﻿@page "/InStock01"
+@using WonWorld.Data;
+@using System.Data.SqlClient;
+@using System.Data.SqlTypes;
+@inject IJSRuntime JSRuntime
+<div class="table-responsive">
+    <table class="table table-bordered" id="saletable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>고객사</th>
+                @for (var i = 1; i <= 12; i++)
+                {
+                    <th>@i 월</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in DataSource)
+            {
+                <tr>
+                    <td>@i.Customer</td>
+                    <td>@i.M1</td>
+                    <td>@i.M2</td>
+                    <td>@i.M3</td>
+                    <td>@i.M4</td>
+                    <td>@i.M5</td>
+                    <td>@i.M6</td>
+                    <td>@i.M7</td>
+                    <td>@i.M8</td>
+                    <td>@i.M9</td>
+                    <td>@i.M10</td>
+                    <td>@i.M11</td>
+                    <td>@i.M12</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+@code {
+    List<WonWorld.Models.Sales> DataSource = new List<WonWorld.Models.Sales>();
+    DbConnector Db = new DbConnector();
+    protected override async Task OnParametersSetAsync()
+    {
+        await DataBind();
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+            await JSRuntime.InvokeAsync<object>("TestDataTablesAdd", "#saletable");
+
+        }
+    }
+
+    private async Task DataBind()
+    {
+        await Task.Delay(0);
+        Db.Open();
+        var sql = " exec dbo.GetSalesByCustomerMonthly '2021'";
+        SqlCommand cmd = new SqlCommand(sql, Db.conn);
+        var dataReader = cmd.ExecuteReader();
+        DataSource = Db.GetList<WonWorld.Models.Sales>(dataReader);
+
+
+        Db.Close();
+    }
+}

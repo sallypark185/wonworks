@@ -1,0 +1,104 @@
+﻿@inject NavigationManager Navigation
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-laugh-wink"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item">
+        <a class="nav-link" href="index.html">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        MES
+    </div>
+    <li class="nav-item active">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#menu1" aria-expanded="true"
+           aria-controls="menu1">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>재고 관리</span>
+        </a>
+        <div id="menu1" class="collapse" aria-labelledby="headingTwo"
+             data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">재고를 관리합니다.</h6>
+                <a class="collapse-item" @onclick='()=>GoMenu("InStock01")'>입고 관리</a>
+                <a class="collapse-item " @onclick='()=>GoMenu("OutStock01")'>출고 관리</a>
+                <a class="collapse-item " @onclick='()=>GoMenu("StockList01")'>재고 조회</a>
+                <a class="collapse-item " @onclick='()=>GoMenu("LotList01")'>로트 조회</a>
+                <a class="collapse-item " @onclick='()=>GoMenu("LotList01")'>BOM 조회</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#menu1" aria-expanded="true"
+           aria-controls="menu1">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>제품 관리</span>
+        </a>
+        <div id="menu1" class="collapse" aria-labelledby="headingTwo"
+             data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">제품을 관리합니다.</h6>
+                <a class="collapse-item" @onclick='()=>GoMenu("InStock01")'>제품 관리</a>
+                <a class="collapse-item " @onclick='()=>GoMenu("OutStock01")'>주문 관리</a>
+                <a class="collapse-item " @onclick='()=>GoMenu("StockList01")'>판매 현황</a>
+            </div>
+        </div>
+    </li>
+       <li class="nav-item active">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#menu1" aria-expanded="true"
+           aria-controls="menu1">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>생산 관리</span>
+        </a>
+        <div id="menu1" class="collapse" aria-labelledby="headingTwo"
+             data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">제품을 생산 관리합니다.</h6>
+                <a class="collapse-item" @onclick='()=>GoMenu("InStock01")'>생산 등록</a>
+                <a class="collapse-item " @onclick='()=>GoMenu("OutStock01")'>생산 조회</a>
+                <a class="collapse-item " @onclick='()=>GoMenu("StockList01")'>생산 현황</a>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item active">
+        <a class="nav-link" href="#" data-toggle="collapse" data-target="#menu1" aria-expanded="true"
+           aria-controls="menu1">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>업체 관리</span>
+        </a>
+        <div id="menu1" class="collapse" aria-labelledby="headingTwo"
+             data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">관리자 기본 화면입니다.</h6>
+                <a class="collapse-item" @onclick='()=>GoMenu("InStock01")'>업체 관리</a>
+            </div>
+        </div>
+    </li>
+</ul>
+<!-- End of Sidebar -->
+
+
+@code{
+        private void GoMenu(string url)
+        {
+            Navigation.NavigateTo(url);
+        }
+    }

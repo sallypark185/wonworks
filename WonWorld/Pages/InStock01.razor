@@ -3,44 +3,54 @@
 @using System.Data.SqlClient;
 @using System.Data.SqlTypes;
 @inject IJSRuntime JSRuntime
+<div class="d-flex justify-content-center algin-items-center">
+    <div class="btn btn-primary " @onclick="()=>ShowInStockModal()">입고 추가</div>
+</div>
 <div class="table-responsive">
     <table class="table table-bordered" id="saletable" width="100%" cellspacing="0">
         <thead>
             <tr>
-                <th>고객사</th>
-                @for (var i = 1; i <= 12; i++)
-                {
-                    <th>@i 월</th>
-                }
+                <th>입고 일자</th>
+                <th>입고 번호</th>
+                <th>입고 총 수량</th>
+                <th>입고 품목수</th>
+                <th>입고 총 금액</th>
+                <th>생성 일자</th>
+                <th>생성자</th>
+              
             </tr>
         </thead>
         <tbody>
             @foreach (var i in DataSource)
             {
                 <tr>
-                    <td>@i.Customer</td>
-                    <td>@i.M1</td>
-                    <td>@i.M2</td>
-                    <td>@i.M3</td>
-                    <td>@i.M4</td>
-                    <td>@i.M5</td>
-                    <td>@i.M6</td>
-                    <td>@i.M7</td>
-                    <td>@i.M8</td>
-                    <td>@i.M9</td>
-                    <td>@i.M10</td>
-                    <td>@i.M11</td>
-                    <td>@i.M12</td>
+                    <td>@i.InDate</td>
+                    <td>@i.InmID</td>
+                    <td>@i.Qty</td>
+                    <td>@i.ItemCount</td>
+                    <td>@i.TotalPrice</td>
+                    <td>@i.CreateDate</td>
+                    <td>@i.CreateUser</td>
+                  
                 </tr>
             }
 
         </tbody>
     </table>
 </div>
+@if (IsStockModalShow)
+{
+<InStockAdd></InStockAdd>
+    
+}
 
 @code {
-    List<WonWorld.Models.Sales> DataSource = new List<WonWorld.Models.Sales>();
+    List<WonWorld.Models.InStockMaster> DataSource = new List<WonWorld.Models.InStockMaster>();
     DbConnector Db = new DbConnector();
+    InStockAdd StockRef = new InStockAdd();
+    private string Title { get; set; }
+    private string Content { get; set; }
+    private bool IsStockModalShow { get; set; } = false;
     protected override async Task OnParametersSetAsync()
     {
         await DataBind();
@@ -59,12 +69,20 @@
     {
         await Task.Delay(0);
         Db.Open();
-        var sql = " exec dbo.GetSalesByCustomerMonthly '2021'";
+        var sql = " select * from InStockMaster";
         SqlCommand cmd = new SqlCommand(sql, Db.conn);
         var dataReader = cmd.ExecuteReader();
-        DataSource = Db.GetList<WonWorld.Models.Sales>(dataReader);
+        DataSource = Db.GetList<WonWorld.Models.InStockMaster>(dataReader);
 
 
         Db.Close();
     }
+
+    private async void ShowInStockModal()
+    {
+        await Task.Delay(0);
+        //await StockRef.();
+
+    }
+
 }

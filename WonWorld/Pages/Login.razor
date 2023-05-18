@@ -1,0 +1,165 @@
+﻿@page "/"
+@using System.Data;
+@using Microsoft.AspNetCore.Identity;
+@using WonWorld.Data;
+@using WonWorld.Models;
+@layout Shared.EmptyLayout
+@inject NavigationManager Navigation
+
+<div class="bg-gradient-primary">
+
+    <div class="container">
+
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+
+            <div class="col-xl-10 col-lg-12 col-md-9">
+
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">로그인</h1>
+                                    </div>
+                                    <form class="user">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control form-control-user"
+                                                id="exampleInputEmail" aria-describedby="emailHelp"
+                                                @bind-value=LoginUser.LoginID
+                                                placeholder="아이디">
+                                        </div>
+                                        <div class="form-group">ㅣ
+                                            <input type="password" class="form-control form-control-user"
+                                                   @bind-value=LoginUser.Password
+                                                id="exampleInputPassword" placeholder="Password">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-checkbox small">
+                                                <input type="checkbox" class="custom-control-input" id="customCheck">
+                                                <label class="custom-control-label" for="customCheck">Remember
+                                                    Me</label>
+                                            </div>
+                                        </div>
+                                        <a @onclick="()=>LoginCheck()" class="btn btn-primary btn-user btn-block">
+                                            Login
+                                        </a>
+                                        <hr>
+                                        <a href="index.html" class="btn btn-google btn-user btn-block">
+                                            <i class="fab fa-google fa-fw"></i> Login with Google
+                                        </a>
+                                        <a href="index.html" class="btn btn-facebook btn-user btn-block">
+                                            <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                                        </a>
+                                    </form>
+                                    <hr>
+                                    <div class="text-center">
+                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                    </div>
+                                    <div class="text-center">
+                                        <a class="small" href="register.html">Create an Account!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@if (IsModalShow)
+{
+    
+<WonWorld.Components.Dialog Title="@Title" 
+                             Content="@Content" 
+                             Type="Components.Dialog.ModalTypes.Alert"
+                             OnConfirm="OnConfirm"
+></WonWorld.Components.Dialog>
+}
+
+@code{
+    private Users LoginUser { get; set; } = new Users();
+    DbConnector Db = new DbConnector();
+    private string Title{ get; set; }
+    private string Content{ get; set; }
+    private bool IsModalShow { get; set; } = false;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await Task.Delay(10);
+            //  LoginUser = new Users();
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+    }
+
+    private async Task LoginCheck()
+    {
+        if (String.IsNullOrEmpty(LoginUser.LoginID))
+        {
+            IsModalShow = true;
+            Content = "로그인 아이디를 입력해주세요.";
+            StateHasChanged();
+            return;
+        }
+        if (String.IsNullOrEmpty(LoginUser.Password))
+        {
+            IsModalShow = true;
+            Content = "비밀번호를 입력해주세요.";
+            StateHasChanged();
+            return;
+        }
+
+        using (var context = new AppDbContext())
+        {
+            var result = context.Users
+                .Where(x => x.LoginID == LoginUser.LoginID)
+                .FirstOrDefault();
+
+            if(result == null)
+            {
+                IsModalShow = true;
+                Content = "아이디가 틀렸습니다.";
+                StateHasChanged();
+                return;
+            }
+            else
+            {
+                var newpassword = Utility.EncryptionSHA256(LoginUser.Password);
+                if (newpassword == result.Password)
+                {
+                    // 성공
+                    Console.WriteLine("로그인성공");
+                    Navigation.NavigateTo("/Dashboard");
+                }else
+                {
+                    // 실패
+                    IsModalShow = true;
+                    Content = "비밀번호가 틀렸습니다.";
+                    StateHasChanged();
+                    return;
+                }
+
+            }
+         
+        }
+      
+
+    }
+
+    private async void OnConfirm()
+    {
+        await Task.Delay(0);
+        IsModalShow = false;
+        StateHasChanged();
+
+    }
+}

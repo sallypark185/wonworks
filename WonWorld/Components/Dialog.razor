@@ -1,0 +1,44 @@
+﻿<div class="modal fade show" tabindex="-1" style="display:block" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Title</h5>
+            </div>
+            <div class="modal-body">
+                <p>@Content</p>
+            </div>
+            <div class="modal-footer">
+                @if (Type == ModalTypes.Alert || Type == ModalTypes.Confirm)
+                {
+                    <button type="button" class="btn btn-primary" @onclick="()=>{if(OnConfirm.HasDelegate)OnConfirm.InvokeAsync();}">확인</button>
+                }else if(Type==ModalTypes.Save){
+                    <button type="button" class="btn btn-primary">저장</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public string? Title{ get; set; }
+    [Parameter]
+    public string? Content{ get; set; }
+    [Parameter]
+    public ModalTypes Type { get; set; } = ModalTypes.Save;
+    [Parameter]
+    public EventCallback OnConfirm { get; set; }
+    [Parameter]
+    public EventCallback OnSaved { get; set; }
+
+
+    public enum ModalTypes
+    {
+         Alert,
+         Confirm,
+         Save
+    }
+
+}

@@ -46,14 +46,8 @@ namespace WonWorld.Data
             da.Fill(ds);
             return ds;
         }
-        public DataSet GetDataSet2(string sql)
-        {
-            SqlDataAdapter da = new SqlDataAdapter();
-            da.SelectCommand = new SqlCommand(sql, conn);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-            return ds;
-        }
+
+      
 
         public List<T> GetList<T>(IDataReader reader)
         {
